@@ -48,15 +48,15 @@ namespace TariffComparisionModel.Test.Controller
 
             yield return new TariffCost
             {
-                TariffName = "Packaged Tariff",
-                AnnualCosts = 850
+                TariffName = "Basic Electricity Tariff",
+                AnnualCosts = 830
             };
         }
 
         [InlineData(3500)]
         [InlineData(3500.56)]
         [Theory]
-        public void GetTariffComparisons_Should_Accept_Number_In_ConsumptionkWhPerYear_ReturnResponseTariffDTOs(decimal consumption)
+        public void GetTariffComparisons_Should_Accept_Number_As_ConsumptionkWhPerYear_ReturnResponseTariffDTOs(decimal consumption)
         {
 
             var tariffList = _controller.GetTariffComparisons(new ConsumptionRequestDTO() { Consumption = consumption });

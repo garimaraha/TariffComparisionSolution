@@ -11,13 +11,19 @@ namespace TariffComparisionModel.API.Extension
             return new ResponseTariffDTO
             {
                 TariffName = tariff.TariffName,
-                AnnualCosts = Math.Round(tariff.AnnualCosts, 2)
+                AnnualCosts = tariff.AnnualCosts.FormatDecimal() 
             };
         }
 
         public static IEnumerable<ResponseTariffDTO> ConvertToDto(this IEnumerable<TariffCost> tariffs)
         {
             return tariffs.Select(product => product.ConvertToDto());
+        }
+        public static decimal FormatDecimal(this decimal value)
+        {
+            //Check is the value is an integer - then remove precision by truncating the decimal value
+            if (value % 1 == 0) { return Math.Truncate(value); }
+            return Math.Round(value, 2);
         }
     }
 }

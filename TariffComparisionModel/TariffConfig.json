@@ -1,7 +1,8 @@
 {
   "ProductTariffs": {
-    "TariffName": "Basic Electricity Tariff",
+
     "BasicElectricity": {
+      "TariffName": "Basic Electricity Tariff",
       "RatePerUnit": 0.22,
       "MonthlyFixedRate": 5
     },

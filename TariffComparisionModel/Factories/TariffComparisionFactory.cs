@@ -32,7 +32,7 @@ namespace TariffComparisionModel.Factories
                     _configuration.GetValue<decimal>("ProductTariffs:PackagedTariff:BasicAnnualUsage"),
                     _configuration.GetValue<decimal>("ProductTariffs:PackagedTariff:FixedAnnualCost"),
                     _configuration.GetValue<decimal>("ProductTariffs:PackagedTariff:AdditionalRatePerUnit"),
-                    _configuration.GetValue<string>("ProductTariffs:BasicElectricity:TariffName")??""
+                    _configuration.GetValue<string>("ProductTariffs:PackagedTariff:TariffName")??""
                 )
                };
             }

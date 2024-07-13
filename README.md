@@ -134,4 +134,4 @@ TariffComparisonSolution.sln                    // Solution file for the entire 
 ## Example Usage
 
 ```bash
-curl "https://localhost:7286/api/TariffComparison/compareCosts?Consumption=4500"
+curl https://localhost:7286/api/TariffComparision/compareCosts?Consumption=4500

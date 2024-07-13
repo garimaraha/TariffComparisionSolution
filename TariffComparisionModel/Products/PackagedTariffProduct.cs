@@ -40,13 +40,14 @@ namespace TariffComparisionModel.Products
         /// <returns></returns>
         public decimal AnnualCostCalculation(decimal consumption)
         {
-            if(consumption <=  _basicAnnualCosnsumptionkWh)
+            if (consumption < 0)
+                throw new ArgumentException("Consumption (kWh/year) value must be zero or a positive number.", nameof(consumption));
+
+            if (consumption <=  _basicAnnualCosnsumptionkWh)
             {
                 return _fixedAnnualCost;
             }
-            if (consumption < 0)
-                throw new ArgumentException("Consumption must not be negative");
-
+          
             var additionalConsumption = (consumption - _basicAnnualCosnsumptionkWh);
             var additionalConsumptionCost = additionalConsumption * _additionalRatePerUnit;
             return _fixedAnnualCost + additionalConsumptionCost;

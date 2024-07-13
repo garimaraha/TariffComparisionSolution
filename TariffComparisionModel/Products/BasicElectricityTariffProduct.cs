@@ -37,11 +37,12 @@ namespace TariffComparisionModel.Products
         /// <exception cref="ArgumentException"></exception>
         public decimal AnnualCostCalculation(decimal consumption)
         {
-           decimal annualBaseCosts = _baseCostsPerMonth * 12;
-            if (consumption == 0) { return annualBaseCosts; }
             if (consumption < 0)
-                throw new ArgumentException("Consumption must not be negative");
+                throw new ArgumentException("Consumption (kWh/year) value must be zero or a positive number.", nameof(consumption));
 
+            decimal annualBaseCosts = _baseCostsPerMonth * 12;
+            if (consumption == 0) { return annualBaseCosts; }
+           
             decimal additionalConsumptionCosts = _ratePerUnit * consumption;
             return annualBaseCosts + additionalConsumptionCosts;
         }

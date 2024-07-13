@@ -24,29 +24,36 @@ namespace TariffComparisionModel.Test.Products
             tariffComparisionFactory = new TariffComparisionFactory();
             tariffComparisionService = new TariffComparisionService(tariffComparisionFactory);
         }
-
+        /// <summary>
+        /// Tests that the GetComparedProducts method returns the correct list of Tariff Costs 
+        /// with accurate annual costs when provided with multiple consumption units.
+        /// </summary>
         [Theory]
         [InlineData(3500)]
         [InlineData(4500)]
         [InlineData(6000)]
         [InlineData(0)]
-        public void GetComparedProducts_WithMultipleConsumptionUnit_ReturnResponseTariffDTOs_WithCorrectAnnualCost(decimal consumption)
+        public async Task GetComparedProducts_WithMultipleConsumptionUnit_ReturnTariffCosts_WithCorrectAnnualCost(decimal consumption)
         {
-            List<TariffCost> actualtariffCosts = tariffComparisionService.GetComparedProducts(consumption).ToList();
+            List<TariffCost> actualtariffCosts = await Task.FromResult(tariffComparisionService.GetComparedProducts(consumption).ToList());
 
             List<TariffCost> expectedTariffList = GetAllTariffsForGivenConsumptionTestDataStore.CreateTariffsForGivenConsumption(consumption).OrderBy(o=>o.AnnualCosts).ToList();
 
             actualtariffCosts.Should().BeEquivalentTo(expectedTariffList,options=>options.WithStrictOrdering());
 
         }
+        /// <summary>
+        /// Tests that the GetComparedProducts method returns a list of Tariff Costs 
+        /// sorted in ascending order by annual cost when provided with multiple consumption units.
+        /// </summary>
         [Theory]
         [InlineData(3500)]
         [InlineData(4500)]
         [InlineData(6000)]
         [InlineData(0)]
-        public void GetComparedProducts_WithMultipleConsumptionUnit_ReturnResponseTariffDTOs_TariffWithAnnualCostInAcsendingOrder(decimal consumption)
+        public async Task GetComparedProducts_WithMultipleConsumptionUnit_ReturnTariffCosts_TariffWithAnnualCostInAcsendingOrder(decimal consumption)
         {
-            IEnumerable<TariffCost> tariffCosts = tariffComparisionService.GetComparedProducts(consumption);
+            IEnumerable<TariffCost> tariffCosts = await Task.FromResult(tariffComparisionService.GetComparedProducts(consumption));
 
             var expectedBasicTariffAnnualCost = BasicElectricityTariffTestDataStore.sampleTestDataList.Find(annualCost => annualCost.ConsumptionKWHPerYear == consumption)?.AnnualCost;
             var expectedPackagedTariffAnnualCost = PackagedTariffTestDataStore.sampleTestDataList.Find(annualCost => annualCost.ConsumptionKWHPerYear == consumption)?.AnnualCost;
@@ -58,23 +65,24 @@ namespace TariffComparisionModel.Test.Products
             actualPackagedTariffAnnualCost.Should().Be(expectedPackagedTariffAnnualCost);
 
         }
-        //Returned Tariff Comaprision service  should have all avaiable Tariffs
+        /// <summary>
+        /// Tests that the GetComparedProducts method returns tariff costs 
+        /// and verifies that all available tariffs are included in the response 
+        /// when provided with multiple consumption units.
+        /// </summary>
+
         [Theory]
         [InlineData(3500)]
         [InlineData(4500)]
         [InlineData(6000)]
         [InlineData(0)]
-        public void GetComparedProducts_WithMultipleConsumptionUnit_ReturnResponseTariffDTOs_VerifyAllAvailableTariffs(decimal consumption)
+        public async Task GetComparedProducts_WithMultipleConsumptionUnit_ReturnTariffCosts_VerifyAllAvailableTariffs(decimal consumption)
         {  
-            List<string> actualtariffCosts = tariffComparisionService.GetComparedProducts(consumption).Select(tariff=>tariff.TariffName).ToList();
+            List<string> actualtariffCosts = await Task.FromResult(tariffComparisionService.GetComparedProducts(consumption).Select(tariff => tariff.TariffName).ToList());
 
             List<string> expectedTariffList = GetAllTariffsForGivenConsumptionTestDataStore.CreateTariffsForGivenConsumption(consumption).Select(tariff=>tariff.TariffName).ToList();
 
             actualtariffCosts.Should().BeEquivalentTo(expectedTariffList);
-
-            
-
-
         }
     }
 }

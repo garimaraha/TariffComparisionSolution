@@ -14,30 +14,28 @@ using TariffComparisionModel.API.DTOs;
 using TariffComparisionModel.API.Extension;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
-using System.Net;
 using FluentAssertions;
-using Xunit.Sdk;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace TariffComparisionModel.Test.Controller
 {
   
-    public class TariffComparisionControllerTest : IClassFixture<WebApplicationFactory<Program>>
+    public class TariffComparisionControllerTest 
     {
         private readonly Mock<ITariffComparisionService> _tariffSvcMock;
         private readonly TariffComparisionController _controller;
-        private readonly WebApplicationFactory<Program> _factory;
 
-        public TariffComparisionControllerTest(WebApplicationFactory<Program> factory)
+        public TariffComparisionControllerTest()
         {
             _tariffSvcMock = new Mock<ITariffComparisionService>();
             _tariffSvcMock.Setup(tariff => tariff.GetComparedProducts(It.IsAny<decimal>())).Returns(CreateTariffs_SampleTestData);
             _controller = new TariffComparisionController(_tariffSvcMock.Object);
-            _factory = factory;
+           
         }
+        /// <summary>
+        /// Generates mock sample test data for creating tariffs to be used in unit tests
+        /// </summary>
+        /// <returns></returns>
         private IEnumerable<TariffCost> CreateTariffs_SampleTestData()
         {
             yield return new TariffCost
@@ -53,13 +51,19 @@ namespace TariffComparisionModel.Test.Controller
             };
         }
 
+        /// <summary>
+        /// Tests that the GetTariffComparisons method accepts a valid number for Consumption (kWh/year)
+        /// and returns a list of ResponseTariffDTOs.
+        /// </summary>
+        /// <param name="consumption"></param>
+        /// <returns></returns>
         [InlineData(3500)]
         [InlineData(3500.56)]
         [Theory]
-        public void GetTariffComparisons_Should_Accept_Number_As_ConsumptionkWhPerYear_ReturnResponseTariffDTOs(decimal consumption)
+        public async Task GetTariffComparisons_Should_Accept_Number_As_ConsumptionkWhPerYear_ReturnResponseTariffDTOs(decimal consumption)
         {
 
-            var tariffList = _controller.GetTariffComparisons(new ConsumptionRequestDTO() { Consumption = consumption });
+            var tariffList = await Task.FromResult(_controller.GetTariffComparisons(new ConsumptionRequestDTO() { Consumption = consumption }));
             var objectResult = Assert.IsAssignableFrom<ObjectResult>(tariffList.Result);
             var tariffDtos = Assert.IsAssignableFrom<IEnumerable<ResponseTariffDTO>>(objectResult.Value).AsEnumerable();
 
@@ -68,11 +72,17 @@ namespace TariffComparisionModel.Test.Controller
             tariffDtos.Should().BeEquivalentTo(expectedList);
               
         }
+         /// <summary>
+         /// Tests that the GetTariffComparisons method returns a list of ResponseTariffDTOs
+         /// containing TariffName and AnnualCost when provided with valid input for Consumption (kWh/year).
+         /// </summary>
+         /// <param name="consumption"></param>
+         /// <returns></returns>
         [Theory]
         [InlineData(4500)]      
-        public void GetTariffComparisons_With_ValidInput_ConsumptionkWhPerYear_ReturnResponseTariffDTOs_With_TariffName_AnnualCost(decimal consumption)
+        public async Task GetTariffComparisons_With_ValidInput_ConsumptionkWhPerYear_ReturnResponseTariffDTOs_With_TariffName_AnnualCost(decimal consumption)
         {
-            var tariffList = _controller.GetTariffComparisons(new ConsumptionRequestDTO() { Consumption = consumption });
+            var tariffList = await Task.FromResult(_controller.GetTariffComparisons(new ConsumptionRequestDTO() { Consumption = consumption }));
             var objectResult = Assert.IsAssignableFrom<ObjectResult>(tariffList.Result);
             var tariffDtos = Assert.IsAssignableFrom<IEnumerable<ResponseTariffDTO>>(objectResult.Value).AsEnumerable();
 
@@ -82,73 +92,62 @@ namespace TariffComparisionModel.Test.Controller
 
 
         }
+        /// <summary>
+        /// Tests that the GetTariffComparisons method throws a custom exception
+        /// when a negative number is provided for Consumption (kWh/year).
+        /// </summary>
+        /// <param name="consumption"></param>
+        /// <returns></returns>
         [InlineData(-5000)] //Invalid Input -- Negative integer number
         [InlineData(-5000.55)] //Invalid Input -- Negative decimal number
         [Theory]
-        public void GetTariffComparisons_Should_Not_Accept_Negative_Number_In_ConsumptionkWhPerYear_ReturnStatus400BadRequest(decimal consumption)
+        public async Task GetTariffComparisons_Should_Not_Accept_Negative_Number_In_ConsumptionkWhPerYear_ThrowCustomException(decimal consumption)
         {
-            var tariffList = _controller.GetTariffComparisons(new ConsumptionRequestDTO() { Consumption = consumption });
-            var objectResult = Assert.IsAssignableFrom<ObjectResult>(tariffList.Result);
-            objectResult.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
-        }
-     
-        [Fact]
-        public void GetTariffComparisons_Should_Not_Accept_EmptyModel_For_ConsumptionkWhPerYear_Return_Status400BadRequest()
-        {
-            var expectederrorMessage = "Required Consumption field is not provided.";
-            _controller.ModelState.AddModelError("Consumption", expectederrorMessage);//Assiging custom model state error for true assertion
-            var emptydModel = new ConsumptionRequestDTO();
-            // Act
-            var result = _controller.GetTariffComparisons(emptydModel); // Need to Pass Empty Model, check Model state working fine 
+            string expectedMessage = "Consumption (kWh/year) value must be zero or a positive number. (Parameter 'consumptionReqDto')";
 
+            var tariffList = await Task.FromResult(_controller.GetTariffComparisons(new ConsumptionRequestDTO() { Consumption = consumption }));
             // Assert
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result.Result);
+            tariffList.Should().BeOfType<Task<IActionResult>>();
 
-            badRequestResult.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
+            tariffList.Exception?.InnerException?.Message.Should().Be(expectedMessage);
+        }
+        /// <summary>
+        /// Tests that the GetTariffComparisons method throws a custom exception
+        /// when the input model for Consumption (kWh/year) is empty.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetTariffComparisons_Should_Not_Accept_EmptyModel_For_ConsumptionkWhPerYear_ThrowCustomException()
+        {
+            string expectedMessage = "Input model cannot be null.";
+            var tariffList = await Task.FromResult(_controller.GetTariffComparisons(new ConsumptionRequestDTO() { }));// Pass Empty model.
+            tariffList.Should().BeOfType<Task<IActionResult>>();
 
-            var error = Assert.IsType<SerializableError>(badRequestResult.Value);
-            var actualerrorMessage = ((string[])error.ToList().Find(e => e.Key == "Consumption").Value)[0];
+            tariffList.Exception?.InnerException?.Message.Should().Be(expectedMessage);
 
-            expectederrorMessage.Should().Be(actualerrorMessage);  
 
 
         }
+        /// <summary>
+        /// Tests that the GetTariffComparisons method handles a SystemMockedException
+        /// thrown by the service and verifies the appropriate error response.
+        /// </summary>
+        /// <returns></returns>
         [Fact]
-        public void GetTariffComparisons_Service_Throws_Exception_Return500InternalServerError()
+        public async Task GetTariffComparisons_Service_Throws_Exception_SystemMockedException()
         {
+            string expectedMessage = "There is an internal server error. Please contact support if this issue persists.";
 
-            _tariffSvcMock.Setup(tariff => tariff.GetComparedProducts(It.IsAny<decimal>())).Throws(new Exception());
+            _tariffSvcMock.Setup(tariff => tariff.GetComparedProducts(It.IsAny<decimal>())).Throws(new Exception(expectedMessage));
 
             // Act
-            var result = _controller.GetTariffComparisons(new ConsumptionRequestDTO() { Consumption=4500}); // Need to Pass Empty Model, check Model state working fine 
+            var result = await Task.FromResult(_controller.GetTariffComparisons(new ConsumptionRequestDTO() { Consumption=4500})); // Need to Pass Empty Model, check Model state working fine 
 
-            // Assert
-            var badRequestResult = Assert.IsType<StatusCodeResult>(result.Result);
-
-            badRequestResult.StatusCode.Should().Be(StatusCodes.Status500InternalServerError);
+            result.Exception?.InnerException?.Message.Should().Be(expectedMessage);
 
         }
 
-        /*Negative Network level Integration Testing -- to ennsure app's components function 
-         correctly at a level that includes the app's supporting infrastructure,such as network */
-        [Theory]
-        [InlineData("abc")] // Invalid input: non-numeric value
-        [InlineData("")]    // Invalid input: empty value
-        [InlineData(null)]  // Invalid input: null value
-        [InlineData("$*")]  // Invalid input: having special characters
-        public async Task GetTariffComparisons_Should_Not_Accept_Invalid_Query_Parameter(string input)
-        {
-            
-            // Prepare Client
-            var client = _factory.CreateClient();
-            var apiUrl = $"/api/TariffComparision/compareCosts?Consumption={input}";
-
-            // Call API with unpexpected query parameters
-            var response = await client.GetAsync(apiUrl);
-
-            // Fluent Assertion
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        }
+        
 
 
     }

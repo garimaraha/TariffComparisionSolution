@@ -38,7 +38,7 @@ namespace TariffComparisionModel.Services
             try
             {
                 // Create a list to hold the calculated tariff costs
-                List<TariffCost> tariffCosts = new();
+                List<TariffCost> tariffCosts = [];
 
                 // Use the factory to get all available products/tariffs
                 var _products = _factory.GetAllTariffs(); 

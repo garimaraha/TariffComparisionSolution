@@ -27,25 +27,20 @@ namespace TariffComparisionModel.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Route("compareCosts")]
         [HttpGet]
-        public ActionResult<IEnumerable<ResponseTariffDTO>> GetTariffComparisons([FromQuery] ConsumptionRequestDTO consumptionReqDto)
+        public async Task<IActionResult> GetTariffComparisons([FromQuery] ConsumptionRequestDTO consumptionReqDto)
         {
-            try
+
+            if (consumptionReqDto == null) // Check if the input model is null
             {
-                if (!ModelState.IsValid)               
-                    return BadRequest(ModelState); // Return BadRequest for any data conversion issue in the query parameter.
-
-                if (consumptionReqDto.Consumption < 0)
-                    return BadRequest(); // Return BadRequest if the consumption value is negative.
-
-
-                IEnumerable<ResponseTariffDTO> tariffCosts = _service.GetComparedProducts(consumptionReqDto.Consumption).ConvertToDto(); //ConvertToDTo() is an etxtension method to convert domain object to DTO object.
-                return Ok(tariffCosts.OrderBy(tariff => tariff.AnnualCosts));// Return tariff costs ordered by annual costs in ascending order.
+                throw new ArgumentNullException(nameof(consumptionReqDto), "Input model cannot be null."); // Throw an exception if null
             }
-            catch (Exception) {
+            if (consumptionReqDto.Consumption < 0)
+                throw new ArgumentException("Consumption (kWh/year) value must be zero or a positive number.", nameof(consumptionReqDto)); // Return BadRequest if the consumption value is negative.
 
-                // Handle any unexpected exceptions by returning a 500 Internal Server Error status code
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
+
+            IEnumerable<ResponseTariffDTO> tariffCosts = await Task.FromResult(_service.GetComparedProducts(consumptionReqDto.Consumption).ConvertToDto()); //ConvertToDTo() is an etxtension method to convert domain object to DTO object.
+            return Ok(tariffCosts.OrderBy(tariff => tariff.AnnualCosts));// Return tariff costs ordered by annual costs in ascending order.
+
         }
     }
 }

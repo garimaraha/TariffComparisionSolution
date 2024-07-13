@@ -60,33 +60,37 @@ namespace TariffComparisionModel.Test.Controller
         [InlineData(3500)]
         [InlineData(3500.56)]
         [Theory]
+      
         public async Task GetTariffComparisons_Should_Accept_Number_As_ConsumptionkWhPerYear_ReturnResponseTariffDTOs(decimal consumption)
         {
+            
+            var tariifList = await _controller.GetTariffComparisons(new ConsumptionRequestDTO { Consumption = consumption });
 
-            var tariffList = await Task.FromResult(_controller.GetTariffComparisons(new ConsumptionRequestDTO() { Consumption = consumption }));
-            var objectResult = Assert.IsAssignableFrom<ObjectResult>(tariffList.Result);
-            var tariffDtos = Assert.IsAssignableFrom<IEnumerable<ResponseTariffDTO>>(objectResult.Value).AsEnumerable();
+            var objectResult = tariifList.Should().BeOfType<OkObjectResult>().Subject;
+            var tariffDtos = objectResult.Value.Should().BeAssignableTo<IEnumerable<ResponseTariffDTO>>().Subject;
 
             var expectedList = CreateTariffs_SampleTestData().ConvertToDto().OrderBy(o => o.AnnualCosts);
 
             tariffDtos.Should().BeEquivalentTo(expectedList);
-              
         }
-         /// <summary>
-         /// Tests that the GetTariffComparisons method returns a list of ResponseTariffDTOs
-         /// containing TariffName and AnnualCost when provided with valid input for Consumption (kWh/year).
-         /// </summary>
-         /// <param name="consumption"></param>
-         /// <returns></returns>
+
+        /// <summary>
+        /// Tests that the GetTariffComparisons method returns a list of ResponseTariffDTOs
+        /// containing TariffName and AnnualCost when provided with valid input for Consumption (kWh/year).
+        /// </summary>
+        /// <param name="consumption"></param>
+        /// <returns></returns>
         [Theory]
         [InlineData(4500)]      
         public async Task GetTariffComparisons_With_ValidInput_ConsumptionkWhPerYear_ReturnResponseTariffDTOs_With_TariffName_AnnualCost(decimal consumption)
         {
-            var tariffList = await Task.FromResult(_controller.GetTariffComparisons(new ConsumptionRequestDTO() { Consumption = consumption }));
-            var objectResult = Assert.IsAssignableFrom<ObjectResult>(tariffList.Result);
-            var tariffDtos = Assert.IsAssignableFrom<IEnumerable<ResponseTariffDTO>>(objectResult.Value).AsEnumerable();
+            var tariifList = await _controller.GetTariffComparisons(new ConsumptionRequestDTO { Consumption = consumption });
+
+            var objectResult = tariifList.Should().BeOfType<OkObjectResult>().Subject;
+            var tariffDtos = objectResult.Value.Should().BeAssignableTo<IEnumerable<ResponseTariffDTO>>().Subject;
 
             var expectedList = CreateTariffs_SampleTestData().ConvertToDto().OrderBy(o => o.AnnualCosts);
+
 
             tariffDtos.Should().BeEquivalentTo(expectedList, options => options.WithStrictOrdering());
 

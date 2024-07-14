@@ -1,9 +1,6 @@
-using Microsoft.Extensions.Configuration;
 using TariffComparisionModel.API.ExceptionHandler;
 using TariffComparisionModel.Factories;
-using TariffComparisionModel.Products;
 using TariffComparisionModel.Services;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

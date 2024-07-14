@@ -18,14 +18,14 @@ This project builds an electricity tariff comparison model for two given product
 - Clone the repository:
 - `git clone https://github.com/garimaraha/TariffComparisionSolution.git`
 - Navigate to the solutoin directory:
-- `TariffComparisionSolution`
+- `cd TariffComparisionSolution`
 - Restore the dependencies:
   ```bash
   dotnet restore
   
 ### Running the Application
 - Navigate to the project directory:
-- `TariffComparisionSolution\TariffComparisionModel.API`
+- `cd TariffComparisionSolution\TariffComparisionModel.API`
 - Build the project:
   ```bash
   dotnet build
@@ -33,6 +33,27 @@ This project builds an electricity tariff comparison model for two given product
   ```bash
   dotnet run
 - The application should now be running at **https://localhost:7286**.
+## Using Postman to Call API
+
+If you encounter an SSL Error: "Unable to verify the first certificate" while using Postman, follow these steps to disable SSL verification in Postman:
+
+1. Open Postman.
+2. Click on the **File** menu.
+3. Select **Settings**.
+4. In the **Settings** dialog, go to the **General** tab.
+5. Turn off the **SSL certificate verification** setting.
+Now you can make API calls without encountering SSL certificate errors.
+
+### Example Postman Call
+1. Open Postman.
+2. Create a new GET request.
+3. Enter the following URL:**https://localhost:7286/api/TariffComparision/compareCosts?Consumption=4500**
+4. Send Request.
+
+### Example CURL Command Usage
+```bash
+curl https://localhost:7286/api/TariffComparision/compareCosts?Consumption=450
+```
 ### Unit Tests
 - Navigate to the Test project directory:
 - `TariffComparisionSolution\TariffComparisionModel.Test`
@@ -59,7 +80,7 @@ TariffComparisonSolution.sln                    // Solution file for the entire 
 │   │       ITariffComparisonFactory.cs          // Interface for getting all tariffs 
 │   │       TariffComparisonFactory.cs           // Implementation of the factoryto retrieve all tariffs 
 │   │
-│   ├───Models                                   // Domain layer: Contains domain entities
+│   ├───Models                                   // Domain Entities: Contains domain entities
 │   │       TariffCost.cs                        // Domain model representing tariff costs
 │   │
 │   ├───Products                                 // Product layer: Defines different tariff products  
@@ -83,7 +104,7 @@ TariffComparisonSolution.sln                    // Solution file for the entire 
 │   │       ConsumptionRequestDTO.cs             // DTO for incoming consumption requests
 │   │       ResponseTariffDTO.cs                 // DTO for outgoing tariff comparison responses
 │   │
-│   ├───ExceptionHandler                          // Cross-cutting concerns: Manages global exceptions
+│   ├───ExceptionHandler                          // Manages global exceptions
 │   │       GlobalExceptionHandler.cs            // Global exception handler for the API
 │   │
 │   ├───Extensions                                // Extension methods: Adds functionalities to existing classes
@@ -118,7 +139,7 @@ TariffComparisonSolution.sln                    // Solution file for the entire 
 ### Services
 - **Business Logic Handling**: Orchestrates operations and business logic, facilitating seamless interactions between Tariif Comaprision models and Tariff Comparision API controllers for a cohesive workflow.
 ### Factories
-- **Loose Coupling**: Promotes loose coupling by abstracting object creation, allowing for flexible and maintainable code architecture.
+- **Loose Coupling**: Promotes loose coupling by abstracting diffrent product object creation, allowing for flexible and maintainable code architecture.
 ### API (Presentation)
 - **HTTP Management**: Efficiently manages HTTP requests and responses, exposing application functionality through a structured interface.
 
@@ -129,9 +150,24 @@ TariffComparisonSolution.sln                    // Solution file for the entire 
 
 - `GET /api/TariffComparison/compareCosts?Consumption={kWh/year}`
   - Accepts a query parameter `Consumption` representing annual kWh consumption.
-  - Returns a list of tariffs sorted by annual cost in ascending order.
+  - Returns a list of tariffs with columns **Tariff name** and **Annual costs (Euro/year)**, sorted by annual cost in ascending order.
+  - Example response:[
+    {
+        "tariffName": "Basic Electricity Tariff",
+        "annualCosts": 1380.22
+    },
+    {
+        "tariffName": "Packaged Tariff",
+        "annualCosts": 1400.30
+    }
+]
 
-## Example Usage
+    
+## ASP.NET Core Developer Certificate Issue
+If you see the error "The ASP.NET Core developer certificate is in an invalid state," it may be due to an expired or untrusted certificate. 
+### To Fix It
+Run the following command to trust the developer certificate:
 
 ```bash
-curl https://localhost:7286/api/TariffComparision/compareCosts?Consumption=4500
+dotnet dev-certs https --trust
+

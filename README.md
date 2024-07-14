@@ -33,27 +33,18 @@ This project builds an electricity tariff comparison model for two given product
   ```bash
   dotnet run
 - The application should now be running at **https://localhost:7286**.
-## Using Postman to Call API
-
-If you encounter an SSL Error: "Unable to verify the first certificate" while using Postman, follow these steps to disable SSL verification in Postman:
-
-1. Open Postman.
-2. Click on the **File** menu.
-3. Select **Settings**.
-4. In the **Settings** dialog, go to the **General** tab.
-5. Turn off the **SSL certificate verification** setting.
-Now you can make API calls without encountering SSL certificate errors.
-
-### Example Postman Call
-1. Open Postman.
-2. Create a new GET request.
-3. Enter the following URL:**https://localhost:7286/api/TariffComparision/compareCosts?Consumption=4500**
-4. Send Request.
-
+  
 ### Example CURL Command Usage
 ```bash
-curl https://localhost:7286/api/TariffComparision/compareCosts?Consumption=450
+curl "https://localhost:7286/api/TariffComparision/compareCosts?Consumption=4500"
 ```
+### Example Postman Call Usage
+1. Open Postman.
+2. If you encounter an SSL Error: "Unable to verify the first certificate" , then turn off the **SSL certificate verification** setting.
+3. Create a new GET request.
+4. Enter the following URL:**https://localhost:7286/api/TariffComparision/compareCosts?Consumption=4500**
+5. Send Request.
+
 ### Unit Tests
 - Navigate to the Test project directory:
 - `TariffComparisionSolution\TariffComparisionModel.Test`

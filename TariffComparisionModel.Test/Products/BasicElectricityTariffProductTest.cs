@@ -1,12 +1,5 @@
 ﻿using FluentAssertions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TariffComparisionModel.Products;
-using Xunit;
-
 namespace TariffComparisionModel.Test.Products
 {
     public class BasicElectricityTariffProductTest

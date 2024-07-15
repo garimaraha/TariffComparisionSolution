@@ -64,7 +64,7 @@ namespace TariffComparisionModel.Test.Controller
         public async Task GetTariffComparisons_Should_Accept_Number_As_ConsumptionkWhPerYear_ReturnResponseTariffDTOs(decimal consumption)
         {
             
-            var tariifList = await _controller.GetTariffComparisons(new ConsumptionRequestDTO { Consumption = consumption });
+            var tariifList = await _controller.GetTariffComparisons(consumption);
 
             var objectResult = tariifList.Should().BeOfType<OkObjectResult>().Subject;
             var tariffDtos = objectResult.Value.Should().BeAssignableTo<IEnumerable<ResponseTariffDTO>>().Subject;
@@ -84,7 +84,7 @@ namespace TariffComparisionModel.Test.Controller
         [InlineData(4500)]      
         public async Task GetTariffComparisons_With_ValidInput_ConsumptionkWhPerYear_ReturnResponseTariffDTOs_With_TariffName_AnnualCost(decimal consumption)
         {
-            var tariifList = await _controller.GetTariffComparisons(new ConsumptionRequestDTO { Consumption = consumption });
+            var tariifList = await _controller.GetTariffComparisons(consumption);
 
             var objectResult = tariifList.Should().BeOfType<OkObjectResult>().Subject;
             var tariffDtos = objectResult.Value.Should().BeAssignableTo<IEnumerable<ResponseTariffDTO>>().Subject;
@@ -107,9 +107,9 @@ namespace TariffComparisionModel.Test.Controller
         [Theory]
         public async Task GetTariffComparisons_Should_Not_Accept_Negative_Number_In_ConsumptionkWhPerYear_ThrowCustomException(decimal consumption)
         {
-            string expectedMessage = "Consumption (kWh/year) value must be zero or a positive number. (Parameter 'consumptionReqDto')";
+            string expectedMessage = $"Consumption (kWh/year) value must be zero or a positive number. (Parameter 'Consumption (kWh/year)')";
 
-            var tariffList = await Task.FromResult(_controller.GetTariffComparisons(new ConsumptionRequestDTO() { Consumption = consumption }));
+            var tariffList = await Task.FromResult(_controller.GetTariffComparisons(consumption));
             // Assert
             tariffList.Should().BeOfType<Task<IActionResult>>();
 
@@ -123,8 +123,8 @@ namespace TariffComparisionModel.Test.Controller
         [Fact]
         public async Task GetTariffComparisons_Should_Not_Accept_EmptyModel_For_ConsumptionkWhPerYear_ThrowCustomException()
         {
-            string expectedMessage = "Input model cannot be null.";
-            var tariffList = await Task.FromResult(_controller.GetTariffComparisons(new ConsumptionRequestDTO() { }));// Pass Empty model.
+            string expectedMessage = $"Consumption (kWh/year) value cannot be null. (Parameter 'Consumption (kWh/year)')";
+            var tariffList = await Task.FromResult(_controller.GetTariffComparisons(null));// Pass Empty model.
             tariffList.Should().BeOfType<Task<IActionResult>>();
 
             tariffList.Exception?.InnerException?.Message.Should().Be(expectedMessage);
@@ -145,7 +145,7 @@ namespace TariffComparisionModel.Test.Controller
             _tariffSvcMock.Setup(tariff => tariff.GetComparedProducts(It.IsAny<decimal>())).Throws(new Exception(expectedMessage));
 
             // Act
-            var result = await Task.FromResult(_controller.GetTariffComparisons(new ConsumptionRequestDTO() { Consumption=4500})); // Need to Pass Empty Model, check Model state working fine 
+            var result = await Task.FromResult(_controller.GetTariffComparisons(4500)); // Need to Pass Empty Model, check Model state working fine 
 
             result.Exception?.InnerException?.Message.Should().Be(expectedMessage);
 

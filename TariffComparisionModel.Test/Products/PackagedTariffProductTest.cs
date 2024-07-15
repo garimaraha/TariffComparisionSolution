@@ -1,16 +1,5 @@
 ﻿using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
-using TariffComparisionModel.API.DTOs;
 using TariffComparisionModel.Products;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
 namespace TariffComparisionModel.Test.Products
 {
     public class PackagedTariffProductTest

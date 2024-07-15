@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
-using TariffComparisionModel;
-using TariffComparisionModel.Services;
+﻿using TariffComparisionModel.Services;
 using TariffComparisionModel.Factories;
 using TariffComparisionModel.Model;
 using FluentAssertions;

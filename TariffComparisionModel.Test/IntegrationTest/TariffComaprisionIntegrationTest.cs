@@ -1,13 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace TariffComparisionModel.Test.IntegrationTest
 {
@@ -32,7 +25,7 @@ namespace TariffComparisionModel.Test.IntegrationTest
 
             // Prepare Client
             var client = _factory.CreateClient();
-            var apiUrl = $"/api/TariffComparision/compareCosts?Consumption={input}";
+            var apiUrl = $"/api/TariffComparision/compareCosts?Consumption (kwh/year)={input}";
 
             // Call API with unpexpected query parameters
             var response = await client.GetAsync(apiUrl);

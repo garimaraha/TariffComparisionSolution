@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TariffComparisionModel.API.DTOs;
 using TariffComparisionModel.API.Extension;
 using TariffComparisionModel.Services;
@@ -27,18 +26,18 @@ namespace TariffComparisionModel.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Route("compareCosts")]
         [HttpGet]
-        public async Task<IActionResult> GetTariffComparisons([FromQuery] ConsumptionRequestDTO consumptionReqDto)
+        public async Task<IActionResult> GetTariffComparisons([FromQuery(Name = "Consumption (kWh/year)")] decimal? ConsumptionkWhyear)
         {
-
-            if (consumptionReqDto == null) // Check if the input model is null
+            // Check if the Consumption (kWh/year) parameter/value in query parameter is provided            
+            if (ConsumptionkWhyear is null) // Check if the input model is null
             {
-                throw new ArgumentNullException(nameof(consumptionReqDto), "Input model cannot be null."); // Throw an exception if null
+                throw new ArgumentNullException("Consumption (kWh/year)", "Consumption (kWh/year) value cannot be null."); // Throw an exception if null
             }
-            if (consumptionReqDto.Consumption < 0)
-                throw new ArgumentException("Consumption (kWh/year) value must be zero or a positive number.", nameof(consumptionReqDto)); // Return BadRequest if the consumption value is negative.
+            if (ConsumptionkWhyear < 0)
+                throw new ArgumentException("Consumption (kWh/year) value must be zero or a positive number.", nameof(ConsumptionkWhyear)); // Return BadRequest if the consumption value is negative.
 
 
-            IEnumerable<ResponseTariffDTO> tariffCosts = await Task.FromResult(_service.GetComparedProducts(consumptionReqDto.Consumption).ConvertToDto()); //ConvertToDTo() is an etxtension method to convert domain object to DTO object.
+            IEnumerable<ResponseTariffDTO> tariffCosts = await Task.FromResult(_service.GetComparedProducts(ConsumptionkWhyear ?? default).ConvertToDto()); //ConvertToDTo() is an etxtension method to convert domain object to DTO object.
             return Ok(tariffCosts.OrderBy(tariff => tariff.AnnualCosts));// Return tariff costs ordered by annual costs in ascending order.
 
         }

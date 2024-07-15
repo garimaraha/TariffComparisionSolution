@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Runtime.CompilerServices;
+﻿using System.Text.Json.Serialization;
 
 namespace TariffComparisionModel.API.DTOs
 {
@@ -10,10 +8,12 @@ namespace TariffComparisionModel.API.DTOs
     public record ResponseTariffDTO
     {
         // Property to hold the name of the tariff 
+        [JsonPropertyName("Tariff name")]
         public string TariffName { get; set; } = "";//Benefit: Ensures the tariff name is always initialized to an empty string, avoiding null values
 
 
         // Property to hold the annual costs for the tariff
+        [JsonPropertyName("Annual costs (€/year)")]
         public decimal AnnualCosts { get; set; } // Benefit: Provides a precise representation of the annual cost in decimal format
 
     }

@@ -17,7 +17,7 @@ namespace TariffComparisionModel.Products
         /// <param name="baseCostsPerMonth"></param>
         /// <param name="ratePerUnit"></param>
         /// <param name="tariffName"></param>
-        public BasicElectricityTariffProduct(decimal baseCostsPerMonth=5, decimal ratePerUnit=0.22m,string tariffName = "Basic Electricity Tariff")
+        public BasicElectricityTariffProduct(decimal baseCostsPerMonth=5, decimal ratePerUnit=0.22m,string tariffName = "basic electricity tariff")
         {
             _baseCostsPerMonth = baseCostsPerMonth;
             _ratePerUnit = ratePerUnit;

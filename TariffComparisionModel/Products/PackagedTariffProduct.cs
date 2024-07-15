@@ -20,7 +20,7 @@ namespace TariffComparisionModel.Products
         /// <param name="fixedAnnualCost"></param>
         /// <param name="additionalRatePerUnit"></param>
         /// <param name="tariffName"></param>
-        public PackagedTariffProduct(decimal basicAnnualCosnsumptionkWh=4000,  decimal fixedAnnualCost=800, decimal additionalRatePerUnit=0.30m,string tariffName= "Packaged Tariff")
+        public PackagedTariffProduct(decimal basicAnnualCosnsumptionkWh=4000,  decimal fixedAnnualCost=800, decimal additionalRatePerUnit=0.30m,string tariffName= "Packaged tariff")
         {
              _basicAnnualCosnsumptionkWh = basicAnnualCosnsumptionkWh;
             _fixedAnnualCost = fixedAnnualCost;

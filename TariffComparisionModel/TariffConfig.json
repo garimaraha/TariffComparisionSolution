@@ -2,12 +2,12 @@
   "ProductTariffs": {
 
     "BasicElectricity": {
-      "TariffName": "Basic Electricity Tariff",
+      "TariffName": "basic electricity tariff",
       "RatePerUnit": 0.22,
       "MonthlyFixedRate": 5
     },
     "PackagedTariff": {
-      "TariffName": "Packaged Tariff",
+      "TariffName": "Packaged tariff",
       "BasicAnnualUsage": 4000,
       "FixedAnnualCost": 800,
       "AdditionalRatePerUnit": 0.30

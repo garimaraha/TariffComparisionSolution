@@ -1,12 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TariffComparisionModel.Factories;
+﻿using TariffComparisionModel.Factories;
 using TariffComparisionModel.Model;
-using TariffComparisionModel.Products;
 
 namespace TariffComparisionModel.Services
 {

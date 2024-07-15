@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TariffComparisionModel.Products
+﻿namespace TariffComparisionModel.Products
 {
     /// <summary>
     /// Product interface defining the contract for tariff calculations.

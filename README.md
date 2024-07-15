@@ -52,7 +52,7 @@ This project builds an electricity tariff comparison model for two given product
   
 ### Example CURL Command Usage
 ```bash
-curl "https://localhost:7286/api/TariffComparision/compareCosts?Consumption%20(kWh/year)=4500"
+curl "https://localhost:7286/api/TariffComparision/compareCosts?Consumption (kWh/year)=4500"
 ```
 ### Example Postman Call Usage
 1. Open Postman.

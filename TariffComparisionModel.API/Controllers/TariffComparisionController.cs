@@ -34,7 +34,7 @@ namespace TariffComparisionModel.API.Controllers
                 throw new ArgumentNullException("Consumption (kWh/year)", "Consumption (kWh/year) value cannot be null."); // Throw an exception if null
             }
             if (ConsumptionkWhyear < 0)
-                throw new ArgumentException("Consumption (kWh/year) value must be zero or a positive number.", nameof(ConsumptionkWhyear)); // Return BadRequest if the consumption value is negative.
+                throw new ArgumentException("Consumption (kWh/year) value must be zero or a positive number.", "Consumption (kWh/year)"); // Return BadRequest if the consumption value is negative.
 
 
             IEnumerable<ResponseTariffDTO> tariffCosts = await Task.FromResult(_service.GetComparedProducts(ConsumptionkWhyear ?? default).ConvertToDto()); //ConvertToDTo() is an etxtension method to convert domain object to DTO object.

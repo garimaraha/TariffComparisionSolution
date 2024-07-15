@@ -1,6 +1,5 @@
 ﻿using TariffComparisionModel.API.DTOs;
 using TariffComparisionModel.Model;
-using TariffComparisionModel.Products;
 
 namespace TariffComparisionModel.API.Extension
 {

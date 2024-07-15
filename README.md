@@ -12,6 +12,22 @@ This project builds an electricity tariff comparison model for two given product
    - Fixed costs for up to 4000 kWh/year: 800€
    - Additional costs above 4000 kWh/year: 30 cent/kWh
    - Calculation model: 800€ for up to  4000kWh/year and above 4000kWh/year additionally 30 cent/kWh.
+## API Endpoint
+
+- `GET /api/TariffComparision/compareCosts?Consumption%20(kWh/year)={kWh/year}`
+  - Example Request: <u>https://localhost:7286/api/TariffComparision/compareCosts?Consumption%20(kWh/year)=4500</u>
+  - Accepts a query parameter **Consumption (kWh/year)** representing annual kWh consumption.
+  - Returns a list of tariffs with columns **Tariff name** and **Annual costs (€/year)**, sorted by annual cost in ascending order.
+  - Example response:[
+    {
+        "Tariff name": "Packaged tariff",
+        "Annual costs (€/year)": 950
+    },
+    {
+        "Tariff name": "basic electricity tariff",
+        "Annual costs (€/year)": 1050
+    }
+]
 ### Prerequisites
 - .NET 8 SDK installed on machine(https://dotnet.microsoft.com/en-us/download/dotnet/8.0).
 ### Installation
@@ -36,13 +52,13 @@ This project builds an electricity tariff comparison model for two given product
   
 ### Example CURL Command Usage
 ```bash
-curl "https://localhost:7286/api/TariffComparision/compareCosts?Consumption=4500"
+curl "https://localhost:7286/api/TariffComparision/compareCosts?Consumption%20(kWh/year)=4500"
 ```
 ### Example Postman Call Usage
 1. Open Postman.
 2. If you encounter an SSL Error: "Unable to verify the first certificate" , then turn off the **SSL certificate verification** setting.
 3. Create a new GET request.
-4. Enter the following URL:**https://localhost:7286/api/TariffComparision/compareCosts?Consumption=4500**
+4. Enter the following URL:**https://localhost:7286/api/TariffComparision/compareCosts?Consumption%20(kWh/year)=4500**
 5. Send Request.
 
 ### Unit Tests
@@ -91,8 +107,7 @@ TariffComparisonSolution.sln                    // Solution file for the entire 
 │   ├───Controllers                              // Presentation layer: Handles incoming requests
 │   │       TariffComparisonController.cs        // Controller for tariff comparison API endpoints
 │   │
-│   ├───DTOs                                     // Data Transfer Objects: Defines request/response shapes
-│   │       ConsumptionRequestDTO.cs             // DTO for incoming consumption requests
+│   ├───DTOs                                     // Data Transfer Objects: Defines response shapes
 │   │       ResponseTariffDTO.cs                 // DTO for outgoing tariff comparison responses
 │   │
 │   ├───ExceptionHandler                          // Manages global exceptions
@@ -137,21 +152,7 @@ TariffComparisonSolution.sln                    // Solution file for the entire 
 ### Tests
 - **Quality Assurance**: Includes unit and integration tests to ensure high code quality and functionality, providing confidence in the robustness of the application.
 
-## API Endpoint
 
-- `GET /api/TariffComparison/compareCosts?Consumption={kWh/year}`
-  - Accepts a query parameter `Consumption` representing annual kWh consumption.
-  - Returns a list of tariffs with columns **Tariff name** and **Annual costs (Euro/year)**, sorted by annual cost in ascending order.
-  - Example response:[
-    {
-        "tariffName": "Basic Electricity Tariff",
-        "annualCosts": 1380.22
-    },
-    {
-        "tariffName": "Packaged Tariff",
-        "annualCosts": 1400.30
-    }
-]
 
     
 ## ASP.NET Core Developer Certificate Issue

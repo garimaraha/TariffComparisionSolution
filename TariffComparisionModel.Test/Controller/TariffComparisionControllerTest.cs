@@ -40,13 +40,13 @@ namespace TariffComparisionModel.Test.Controller
         {
             yield return new TariffCost
             {
-               TariffName= "Packaged Tariff",
+               TariffName= "Packaged tariff",
                AnnualCosts=800
             };
 
             yield return new TariffCost
             {
-                TariffName = "Basic Electricity Tariff",
+                TariffName = "basic electricity tariff",
                 AnnualCosts = 830
             };
         }
